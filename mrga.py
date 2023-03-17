@@ -444,7 +444,8 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                        reply_markup=InlineKeyboardMarkup(CHECK_CORRECT_PHOTOS))
             else:
                 time.sleep(2)
-                await app.send_message(photo.from_user.id, "Ах ты, шалун! -_-")
+                await app.send_message(photo.from_user.id, "Наш искусственный интеллект еще в процессе обучения, "
+                                                           "но сейчас он заблокировал Вашу фотографию🙊")
 
         return
     elif answer_message.data == 'add_third_photo':
@@ -497,7 +498,8 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                        reply_markup=InlineKeyboardMarkup(CHECK_CORRECT_PHOTOS))
             else:
                 time.sleep(2)
-                await app.send_message(photo.from_user.id, "Ах ты, шалун! -_-")
+                await app.send_message(photo.from_user.id, "Наш искусственный интеллект еще в процессе обучения, "
+                                                           "но сейчас он заблокировал Вашу фотографию🙊")
 
         return
     elif answer_message.data == 'add_forth_photo':
@@ -550,7 +552,8 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                        reply_markup=InlineKeyboardMarkup(CHECK_CORRECT_PHOTOS))
             else:
                 time.sleep(2)
-                await app.send_message(photo.from_user.id, "Ах ты, шалун! -_-")
+                await app.send_message(photo.from_user.id, "Наш искусственный интеллект еще в процессе обучения, "
+                                                           "но сейчас он заблокировал Вашу фотографию🙊")
 
         return
     elif answer_message.data == 'add_fiveth_photo':
@@ -604,7 +607,8 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                        reply_markup=InlineKeyboardMarkup(CHECK_CORRECT_PHOTOS))
             else:
                 time.sleep(2)
-                await app.send_message(photo.from_user.id, "Ах ты, шалун! -_-")
+                await app.send_message(photo.from_user.id, "Наш искусственный интеллект еще в процессе обучения, "
+                                                           "но сейчас он заблокировал Вашу фотографию🙊")
 
         return
     elif answer_message.data == 'add_sixth_photo':
@@ -661,7 +665,8 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                        reply_markup=InlineKeyboardMarkup(CHECK_CORRECT_PHOTOS))
             else:
                 time.sleep(2)
-                await app.send_message(photo.from_user.id, "Ах ты, шалун! -_-")
+                await app.send_message(photo.from_user.id, "Наш искусственный интеллект еще в процессе обучения, "
+                                                           "но сейчас он заблокировал Вашу фотографию🙊")
 
         return
     elif answer_message.data == 'add_seventh_photo':
@@ -717,7 +722,8 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                        reply_markup=InlineKeyboardMarkup(CHECK_CORRECT_PHOTOS))
             else:
                 time.sleep(2)
-                await app.send_message(photo.from_user.id, "Ах ты, шалун! -_-")
+                await app.send_message(photo.from_user.id, "Наш искусственный интеллект еще в процессе обучения, "
+                                                           "но сейчас он заблокировал Вашу фотографию🙊")
 
         return
     elif answer_message.data == 'make_edit':

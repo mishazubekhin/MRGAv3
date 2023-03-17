@@ -2,6 +2,7 @@
 
 ### Not for copying and usage
 by Zubekhin M.V.
+e-mail: mzubekhin94@gmail.com
 # About
 `ru` Ботинок создан для предоставления доступной демократии гражданам Россйиской Федерации путем освещения насущных проблем граждан всеобщим голосованием.
 Голосование подкрепляется фотоматериалами, которые проходят через фильтр релевантности, самосозданной моделью Tensorflow.
@@ -9,7 +10,7 @@ by Zubekhin M.V.
 Граждане для более объективного принятия какого либо решения выбирают свой регион проживания.
 Дальнейшая судьба голосования в настоящий момент находится в процессе разработки. Необходимо получить АПИ органов власти для направления наиболее актальных и популярных голосваний.
 
-`eng` Boot was created to provide affordable democracy to the citizens of the Russian Federation by highlighting the pressing problems of citizens by universal suffrage.
+`eng` Bot was created to provide affordable democracy to the citizens of the Russian Federation by highlighting the pressing problems of citizens by universal suffrage.
 Voting is backed up by photo submissions that pass through a relevancy filter, a self-created Tensorflow model.
 A filter has also been created to detect obscene words and prohibit them.
 Citizens choose their region of residence for a more objective decision-making.
