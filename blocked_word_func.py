@@ -54,7 +54,8 @@ def condition_filter(condition_check):
 
 # Фильтр плохих фотографий
 def detect_photo(photo):
-    model = tf.keras.models.load_model('D:\PythonPROJECTS\MRGAv3\detector_photo\Flickr8k_text\Models\my_model.h5')
+    abs_path = os.path.abspath('D:\PythonPROJECTS\MRGAv3\detector_photo\Flickr8k_text\Models\my_model.h5')
+    model = tf.keras.models.load_model(abs_path)
     file_id = photo.photo.file_id
     url = f"https://api.telegram.org/bot{bot_token}/getFile?file_id={file_id}"
     file_path = requests.get(url).json()["result"]["file_path"]
@@ -68,7 +69,7 @@ def detect_photo(photo):
     img_resized = tf.image.resize(input_image, [224, 224])
     img_expended = np.expand_dims(img_resized, axis=0)
     prediction = model.predict(img_expended)
-    print(f'Вероятность отнесения изображения к хорошему: {prediction[0][0] * 10000}')
+    print(f'Вероятность отнесения изображения к хорошему: {prediction[0][0] * 10000}%')
     if 0.5 <= prediction[0][0] * 100 <= 1:
         return class_names[1]
     else:
