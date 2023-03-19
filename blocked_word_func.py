@@ -54,7 +54,7 @@ def condition_filter(condition_check):
 
 # Фильтр плохих фотографий
 def detect_photo(photo):
-    abs_path = os.path.abspath('D:\PythonPROJECTS\MRGAv3\detector_photo\Flickr8k_text\Models\my_model.h5')
+    abs_path = os.path.abspath('/app/detector_photo/Flickr8k_text/Models/my_model.h5')
     model = tf.keras.models.load_model(abs_path)
     file_id = photo.photo.file_id
     url = f"https://api.telegram.org/bot{bot_token}/getFile?file_id={file_id}"
