@@ -4,7 +4,7 @@ services:
   bot:
     restart: always
     volumes:
-      - ./mrgabot_cache:/app/tguser.db
+      - ./mrgabot_cache:/
     env_file:
       - .env
     build:
