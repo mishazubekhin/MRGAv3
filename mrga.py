@@ -23,9 +23,9 @@ WELCOME_MESSAGE = 'Доступная демократия сейчас!\nЧто
 WELCOME_MESSAGE_AFTER_START = '''
  Вы стали активным участником в жизни общества!\n
  Вам будут приходить голосования, запущенные такими же, как ты!\n 
- Чтобы выбрать свой регион, нажмите кнопку "Выбрать свой дом"\n
+ Для начала выберите свой регион, нажав на кнопку "Выбрать свой дом"\n
  Чтобы создать голосование в выбранном регионе, нажмите кнопку "Создать голосование"\n
- Чтобы вызвать своё голосование для контроля, нажмите кнопку "Мои петиции"\n
+ Чтобы вызвать свои последние три голосования, нажмите кнопку "Мои петиции"\n
  Чтобы понять, ЧТО ВООБЩЕ ПРОИСХОДИТ, нажмите кнопку "Инструкция" '''
 
 WELCOME_MESSAGE_BUTTONS = [
@@ -147,60 +147,66 @@ async def create_vote(app: Client, answer_message: CallbackQuery):
 
 @app.on_message(filters.text & condition_filter(["command_poll"]), group=2)
 async def poll_creating(app: Client, message: Message):
-    if time_date_check(message.from_user.id):
-        if await blocked_word(app, message) is False:
-            input_message = message.text
-            msg_poll = await app.send_poll(chat_id=message.from_user.id, is_anonymous=False,
-                                           question=input_message,
-                                           options=['Согласен', "Возражаю",
-                                                    "Не могу объективно оценить проблему"])
-            msg_poll_id = msg_poll.id
-            db_vote = sqlite3.connect("tguser.db")
-            cur_vote = db_vote.cursor()
-            cur_vote.execute(
-                f"UPDATE polls set photos = (Null),"
-                f"second_photo = (Null),"
-                f"third_photo = (Null),"
-                f"forth_photo = (Null),"
-                f"fiveth_photo = (Null),"
-                f"sixth_photo = (Null),"
-                f"seventh_photo = (Null)"
-                f"WHERE user_id = ('{message.from_user.id}')")
-            cur_vote.execute(
-                f"UPDATE polls SET condition = ('check_create') WHERE user_id = ('{message.from_user.id}');")
-            cur_vote.execute(
-                f"UPDATE polls set poll_id = ('{msg_poll_id}') WHERE user_id = ('{message.from_user.id}')")
-            db_vote.commit()
-            db_vote.close()
-            CHECK_FOR_CORRECT = 'Проверьте, верно ли все, что вы хотели изложить?!\nДобавьте подтверждающие ' \
-                                'фотографии\nЕсли что-то неверно, продублируйте весь текст с учетом правок, ' \
-                                'нажав на кнопку "Хочу немного исправить!"'
-            CHECK_CORRECT_BUTTONS = [
-                [InlineKeyboardButton('Добавить фотографии к петиции', callback_data='add_photo')],
-                [InlineKeyboardButton('Опубликовать без фотографий', callback_data='all_right')],
-                [InlineKeyboardButton('Хочу немного исправить!', callback_data='make_edit')],
-                [InlineKeyboardButton('Вернуться на главную', callback_data='home')]
-            ]
-            reply_markup_1 = InlineKeyboardMarkup(CHECK_CORRECT_BUTTONS)
-            await app.send_message(chat_id=message.from_user.id, text=CHECK_FOR_CORRECT,
-                                   reply_markup=reply_markup_1)
+    db_poll = DB_poll()
+    if db_poll.simple_condition(message.from_user.id) != 'null':
+        if time_date_check(message.from_user.id):
+            if await blocked_word(app, message) is False:
+                input_message = message.text
+                msg_poll = await app.send_poll(chat_id=message.from_user.id, is_anonymous=False,
+                                               question=input_message,
+                                               options=['Согласен', "Возражаю",
+                                                        "Не могу объективно оценить проблему"])
+                msg_poll_id = msg_poll.id
+                db_vote = sqlite3.connect("tguser.db")
+                cur_vote = db_vote.cursor()
+                cur_vote.execute(
+                    f"UPDATE polls set photos = (Null),"
+                    f"second_photo = (Null),"
+                    f"third_photo = (Null),"
+                    f"forth_photo = (Null),"
+                    f"fiveth_photo = (Null),"
+                    f"sixth_photo = (Null),"
+                    f"seventh_photo = (Null)"
+                    f"WHERE user_id = ('{message.from_user.id}')")
+                cur_vote.execute(
+                    f"UPDATE polls SET condition = ('check_create') WHERE user_id = ('{message.from_user.id}');")
+                cur_vote.execute(
+                    f"UPDATE polls set poll_id = ('{msg_poll_id}') WHERE user_id = ('{message.from_user.id}')")
+                db_vote.commit()
+                db_vote.close()
+                CHECK_FOR_CORRECT = 'Проверьте, верно ли все, что вы хотели изложить?!\nДобавьте подтверждающие ' \
+                                    'фотографии\nЕсли что-то неверно, продублируйте весь текст с учетом правок, ' \
+                                    'нажав на кнопку "Хочу немного исправить!"'
+                CHECK_CORRECT_BUTTONS = [
+                    [InlineKeyboardButton('Добавить фотографии к петиции', callback_data='add_photo')],
+                    [InlineKeyboardButton('Опубликовать без фотографий', callback_data='all_right')],
+                    [InlineKeyboardButton('Хочу исправить!', callback_data='make_edit')],
+                    [InlineKeyboardButton('Вернуться на главную', callback_data='home')]
+                ]
+                reply_markup_1 = InlineKeyboardMarkup(CHECK_CORRECT_BUTTONS)
+                await app.send_message(chat_id=message.from_user.id, text=CHECK_FOR_CORRECT,
+                                       reply_markup=reply_markup_1)
 
+            else:
+                CREATE_POLL_MESSAGE = 'Изложите, пожалуйста, в сообщении ⬇️⬇️⬇️ проблему, согласно инструкции'
+                reply_markup_tutorial = [
+                    [InlineKeyboardButton('Инструкция', url='https://t.me/MakeRussiaGreatAgain_official/19')],
+                    [InlineKeyboardButton('Вернуться на главную', callback_data='home')]
+                ]
+                await app.send_message(chat_id=message.from_user.id, text=CREATE_POLL_MESSAGE,
+                                       reply_markup=InlineKeyboardMarkup(reply_markup_tutorial),
+                                       disable_web_page_preview=True)
+                return
         else:
-            CREATE_POLL_MESSAGE = 'Изложите, пожалуйста, суть проблемы, согласно инструкции'
-            reply_markup_tutorial = [
-                [InlineKeyboardButton('Инструкция', url='https://t.me/MakeRussiaGreatAgain_official/19')],
-                [InlineKeyboardButton('Вернуться на главную', callback_data='home')]
-            ]
-            await app.send_message(chat_id=message.from_user.id, text=CREATE_POLL_MESSAGE,
-                                   reply_markup=InlineKeyboardMarkup(reply_markup_tutorial),
+            await app.send_message(chat_id=message.from_user.id,
+                                   text="Вы можете создавать петиции не чаще одного раза в сутки!"
+                                        "Подготовьтесь пока получше!",
                                    disable_web_page_preview=True)
-            return
+        return
     else:
         await app.send_message(chat_id=message.from_user.id,
-                               text="Вы можете создавать петиции не чаще одного раза в сутки!"
-                                    "Подготовьтесь пока получше!",
-                               disable_web_page_preview=True)
-    return
+                                   text="Для начала выберите, пожалуйста, свой регион!",
+                                   disable_web_page_preview=True)
 
 
 @app.on_callback_query(condition_filter(['check_create', 'add_first_photo', 'add_second_photo', 'add_third_photo',
@@ -226,7 +232,7 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
             for id_user in enum_user_id:
                 app.forward_messages(id_user, answer_message.from_user.id,
                                      message_ids=message_poll_id)
-            app.send_message(answer_message.from_user.id, 'Вернуться на главную',
+            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                              reply_markup=reply_markup_back_home,
                              disable_web_page_preview=True)
             return
@@ -237,7 +243,7 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                 app.forward_messages(id_user, answer_message.from_user.id,
                                      message_ids=db_poll.return_poll_id(
                                          user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Вернуться на главную',
+            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                              reply_markup=reply_markup_back_home,
                              disable_web_page_preview=True)
             return
@@ -252,7 +258,7 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                 app.forward_messages(id_user, answer_message.from_user.id,
                                      message_ids=db_poll.return_poll_id(
                                          user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Вернуться на главную',
+            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                              reply_markup=reply_markup_back_home,
                              disable_web_page_preview=True)
             return
@@ -268,7 +274,7 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                 app.forward_messages(id_user, answer_message.from_user.id,
                                      message_ids=db_poll.return_poll_id(
                                          user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Вернуться на главную',
+            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                              reply_markup=reply_markup_back_home,
                              disable_web_page_preview=True)
             return
@@ -285,7 +291,7 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                 app.forward_messages(id_user, answer_message.from_user.id,
                                      message_ids=db_poll.return_poll_id(
                                          user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Вернуться на главную',
+            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                              reply_markup=reply_markup_back_home,
                              disable_web_page_preview=True)
             return
@@ -303,7 +309,7 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                 app.forward_messages(id_user, answer_message.from_user.id,
                                      message_ids=db_poll.return_poll_id(
                                          user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Вернуться на главную',
+            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                              reply_markup=reply_markup_back_home,
                              disable_web_page_preview=True)
             return
@@ -322,7 +328,7 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                 app.forward_messages(id_user, answer_message.from_user.id,
                                      message_ids=db_poll.return_poll_id(
                                          user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Вернуться на главную',
+            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                              reply_markup=reply_markup_back_home,
                              disable_web_page_preview=True)
             return
@@ -341,7 +347,7 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                 app.forward_messages(id_user, answer_message.from_user.id,
                                      message_ids=db_poll.return_poll_id(
                                          user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Вернуться на главную',
+            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                              reply_markup=reply_markup_back_home,
                              disable_web_page_preview=True)
             return
