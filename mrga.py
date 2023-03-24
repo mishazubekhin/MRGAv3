@@ -94,7 +94,7 @@ async def create_vote(app: Client, answer_message: CallbackQuery):
                                    disable_web_page_preview=True)
         else:
             db_poll.update_condition(stream="command_poll", user_id=answer_message.from_user.id)
-            CREATE_POLL_MESSAGE = 'Изложите, пожалуйста, суть проблемы, согласно инструкции!'
+            CREATE_POLL_MESSAGE = 'Изложите, пожалуйста, в сообщении ⬇️⬇️⬇️ проблему, согласно инструкции'
             reply_markup_tutorial = [
                 [InlineKeyboardButton('Инструкция', url='https://t.me/MakeRussiaGreatAgain_official/19')],
                 [InlineKeyboardButton('Вернуться на главную', callback_data='home')]
