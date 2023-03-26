@@ -34,7 +34,7 @@ datagen = ImageDataGenerator(
 )
 
 train_generator = datagen.flow_from_directory(
-    'D:\PythonPROJECTS\MRGAv3\detector_photo\Flickr8k_text\\any_photo',
+    'D:\PythonPROJECTS\Photo_for_datascience\\any_photo',
     target_size=(img_height, img_width),
     color_mode='rgb',
     class_mode='sparse',
@@ -77,7 +77,7 @@ model.compile(
 )
 
 model.fit(train_generator,
-          epochs=7)
+          epochs=10)
 # [tf.keras.losses.SparseCategoricalCrossentropy()]
 
 tf.keras.models.save_model(model, "D:\PythonPROJECTS\MRGAv3\detector_photo\Flickr8k_text\Models\\my_model.h5",
