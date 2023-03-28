@@ -70,7 +70,7 @@ def detect_photo(photo):
     img_expended = np.expand_dims(img_resized, axis=0)
     prediction = model.predict(img_expended)
     print(f'Вероятность отнесения изображения к хорошему: {prediction[0][0] * 10000}%')
-    if 0.5 <= prediction[0][0] * 100 <= 1:
+    if 0.4 <= prediction[0][0] * 100:
         return class_names[1]
     else:
         return class_names[0]
