@@ -7,7 +7,8 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyb
 from pyrogram import Client, filters, enums
 import os
 from dotenv import load_dotenv
-from blocked_word_func import blocked_word, condition_filter, photo_filter_custom, not_media_group, time_date_check
+from blocked_word_func import blocked_word, condition_filter, photo_filter_custom, not_media_group, time_date_check, \
+    detect_photo
 from data_base_users import DB_poll
 from date_base_polls import User_polls
 
@@ -771,20 +772,6 @@ async def welcome_group(app: Client, message: Message):
 # async def get_id_photo(app: Client, message: Message):
 #     await message.reply(message.photo.file_id)
 
-
-# Блок тестинга модели
-# @app.on_message(filters.photo)
-# async def test_photo(app: Client, message: Message):
-#     # file_id = message.photo.file_id
-#     # token = "6178989650:AAHDcfbZdOpnVlIDjjlkDM6urQ6dD2kLzvg"
-#     # url = f"https://api.telegram.org/bot{token}/getFile?file_id={file_id}"
-#     # file_path = requests.get(url).json()["result"]["file_path"]
-#     # print(file_path)
-#     # download_url = f"https://api.telegram.org/file/bot{token}/{file_path}"
-#     # print(download_url)
-#     # print(f"https://t.me/MakeRussiaGreatAgain_bot/{message.id}")
-#     detect_photo(message)
-#     photo_filter_custom(message)
 
 
 print('I`m working')

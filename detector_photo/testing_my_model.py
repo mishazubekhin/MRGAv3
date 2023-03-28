@@ -6,7 +6,7 @@ model = tf.keras.models.load_model('D:\PythonPROJECTS\MRGAv3\detector_photo\Flic
 
 
 input_image = tf.keras.utils.load_img(
-    "D:\\PythonPROJECTS\\MRGAv3\\detector_photo\\Flickr8k_text\\any_photo\good\\13S1t.jpg")
+    "C:\\Users\\volvo\\Downloads\\Ez_EAmU7hik.jpg")
 
 def resize_images(img, label):
     img = tf.cast(img, tf.float32)
@@ -22,7 +22,7 @@ img_resized = tf.image.resize(input_image, [224, 224])
 img_expended = np.expand_dims(img_resized, axis=0)
 prediction = model.predict(img_expended)
 print(prediction)
-print(f'Вероятность отнесения изображения к хорошему: {prediction[0][0]*10000}')
+print(f'Вероятность отнесения изображения к хорошему: {prediction[0][0]}')
 if 0.5 <= prediction[0][0]*100 <= 1:
     print("good")
 else:
