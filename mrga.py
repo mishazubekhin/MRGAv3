@@ -231,10 +231,12 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
         if db_poll.simple_condition(answer_message.from_user.id) == "check_create":
             db_poll.update_condition('start', answer_message.from_user.id)
             for id_user in enum_user_id:
-                chat_member = await app.get_chat_member(id_user, id_user)
-                if chat_member.status != 'banned' or 'left':
-                    await app.forward_messages(id_user, answer_message.from_user.id,
-                                               message_ids=message_poll_id)
+                chat_id = await app.get_chat(id_user)
+                if id_user != chat_id.id:
+                    chat_member = await app.get_chat_member(chat_id.id, id_user)
+                    if chat_member.status != 'banned' or 'left':
+                        await app.forward_messages(id_user, answer_message.from_user.id,
+                                                   message_ids=message_poll_id)
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
