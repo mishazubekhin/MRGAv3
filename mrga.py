@@ -206,16 +206,16 @@ async def poll_creating(app: Client, message: Message):
         return
     else:
         await app.send_message(chat_id=message.from_user.id,
-                                   text="Для начала выберите, пожалуйста, свой регион!",
-                                   disable_web_page_preview=True)
+                               text="Для начала выберите, пожалуйста, свой регион!",
+                               disable_web_page_preview=True)
 
 
 @app.on_callback_query(condition_filter(['check_create', 'add_first_photo', 'add_second_photo', 'add_third_photo',
                                          'add_forth_photo', 'add_fiveth_photo', 'add_sixth_photo',
                                          'add_seventh_photo']), group=2)
-def improve_vote(app: Client, answer_message: CallbackQuery):
+async def improve_vote(app: Client, answer_message: CallbackQuery):
     if answer_message.data == 'all_right':
-        app.send_chat_action(answer_message.from_user.id, enums.ChatAction.IMPORT_HISTORY)
+        await app.send_chat_action(answer_message.from_user.id, enums.ChatAction.IMPORT_HISTORY)
         db_poll = DB_poll()
         message_poll_id = db_poll.return_poll_id(user_id=answer_message.from_user.id)
         message_photo_id = db_poll.return_photos(answer_message.from_user.id)
@@ -231,22 +231,22 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
         if db_poll.simple_condition(answer_message.from_user.id) == "check_create":
             db_poll.update_condition('start', answer_message.from_user.id)
             for id_user in enum_user_id:
-                app.forward_messages(id_user, answer_message.from_user.id,
-                                     message_ids=message_poll_id)
-            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
-                             reply_markup=reply_markup_back_home,
-                             disable_web_page_preview=True)
+                await app.forward_messages(id_user, answer_message.from_user.id,
+                                           message_ids=message_poll_id)
+            await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
+                                   reply_markup=reply_markup_back_home,
+                                   disable_web_page_preview=True)
             return
         if db_poll.simple_condition(answer_message.from_user.id) == "add_first_photo":
             db_poll.update_condition('start', answer_message.from_user.id)
             for id_user in enum_user_id:
-                app.send_photo(id_user, photo=message_photo_id, protect_content=True)
-                app.forward_messages(id_user, answer_message.from_user.id,
-                                     message_ids=db_poll.return_poll_id(
-                                         user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
-                             reply_markup=reply_markup_back_home,
-                             disable_web_page_preview=True)
+                await app.send_photo(id_user, photo=message_photo_id, protect_content=True)
+                await app.forward_messages(id_user, answer_message.from_user.id,
+                                           message_ids=db_poll.return_poll_id(
+                                               user_id=answer_message.from_user.id))
+            await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
+                                   reply_markup=reply_markup_back_home,
+                                   disable_web_page_preview=True)
             return
         if db_poll.simple_condition(answer_message.from_user.id) == "add_second_photo":
             db_poll.update_condition('start', answer_message.from_user.id)
@@ -254,14 +254,14 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_second_photo(answer_message.from_user.id))
                                 ]
             for id_user in enum_user_id:
-                app.send_media_group(id_user, media=list_photo_users,
-                                     protect_content=True)
-                app.forward_messages(id_user, answer_message.from_user.id,
-                                     message_ids=db_poll.return_poll_id(
-                                         user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
-                             reply_markup=reply_markup_back_home,
-                             disable_web_page_preview=True)
+                await app.send_media_group(id_user, media=list_photo_users,
+                                           protect_content=True)
+                await app.forward_messages(id_user, answer_message.from_user.id,
+                                           message_ids=db_poll.return_poll_id(
+                                               user_id=answer_message.from_user.id))
+            await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
+                                   reply_markup=reply_markup_back_home,
+                                   disable_web_page_preview=True)
             return
         if db_poll.simple_condition(answer_message.from_user.id) == "add_third_photo":
             db_poll.update_condition('start', answer_message.from_user.id)
@@ -270,14 +270,14 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_third_photo(answer_message.from_user.id))
                                 ]
             for id_user in enum_user_id:
-                app.send_media_group(id_user, media=list_photo_users,
-                                     protect_content=True)
-                app.forward_messages(id_user, answer_message.from_user.id,
-                                     message_ids=db_poll.return_poll_id(
-                                         user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
-                             reply_markup=reply_markup_back_home,
-                             disable_web_page_preview=True)
+                await app.send_media_group(id_user, media=list_photo_users,
+                                           protect_content=True)
+                await app.forward_messages(id_user, answer_message.from_user.id,
+                                           message_ids=db_poll.return_poll_id(
+                                               user_id=answer_message.from_user.id))
+            await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
+                                   reply_markup=reply_markup_back_home,
+                                   disable_web_page_preview=True)
             return
         if db_poll.simple_condition(answer_message.from_user.id) == "add_forth_photo":
             db_poll.update_condition('start', answer_message.from_user.id)
@@ -287,14 +287,14 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_forth_photo(answer_message.from_user.id))
                                 ]
             for id_user in enum_user_id:
-                app.send_media_group(id_user, media=list_photo_users,
-                                     protect_content=True)
-                app.forward_messages(id_user, answer_message.from_user.id,
-                                     message_ids=db_poll.return_poll_id(
-                                         user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
-                             reply_markup=reply_markup_back_home,
-                             disable_web_page_preview=True)
+                await app.send_media_group(id_user, media=list_photo_users,
+                                           protect_content=True)
+                await app.forward_messages(id_user, answer_message.from_user.id,
+                                           message_ids=db_poll.return_poll_id(
+                                               user_id=answer_message.from_user.id))
+            await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
+                                   reply_markup=reply_markup_back_home,
+                                   disable_web_page_preview=True)
             return
         if db_poll.simple_condition(answer_message.from_user.id) == "add_fiveth_photo":
             db_poll.update_condition('start', answer_message.from_user.id)
@@ -305,14 +305,14 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_fiveth_photo(answer_message.from_user.id)),
                                 ]
             for id_user in enum_user_id:
-                app.send_media_group(id_user, media=list_photo_users,
-                                     protect_content=True)
-                app.forward_messages(id_user, answer_message.from_user.id,
-                                     message_ids=db_poll.return_poll_id(
-                                         user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
-                             reply_markup=reply_markup_back_home,
-                             disable_web_page_preview=True)
+                await app.send_media_group(id_user, media=list_photo_users,
+                                           protect_content=True)
+                await app.forward_messages(id_user, answer_message.from_user.id,
+                                           message_ids=db_poll.return_poll_id(
+                                               user_id=answer_message.from_user.id))
+            await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
+                                   reply_markup=reply_markup_back_home,
+                                   disable_web_page_preview=True)
             return
         if db_poll.simple_condition(answer_message.from_user.id) == "add_sixth_photo":
             db_poll.update_condition('start', answer_message.from_user.id)
@@ -324,14 +324,14 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_sixth_photo(answer_message.from_user.id)),
                                 ]
             for id_user in enum_user_id:
-                app.send_media_group(id_user, media=list_photo_users,
-                                     protect_content=True)
-                app.forward_messages(id_user, answer_message.from_user.id,
-                                     message_ids=db_poll.return_poll_id(
-                                         user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
-                             reply_markup=reply_markup_back_home,
-                             disable_web_page_preview=True)
+                await app.send_media_group(id_user, media=list_photo_users,
+                                           protect_content=True)
+                await app.forward_messages(id_user, answer_message.from_user.id,
+                                           message_ids=db_poll.return_poll_id(
+                                               user_id=answer_message.from_user.id))
+            await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
+                                   reply_markup=reply_markup_back_home,
+                                   disable_web_page_preview=True)
             return
         if db_poll.simple_condition(answer_message.from_user.id) == "add_seventh_photo":
             db_poll.update_condition('start', answer_message.from_user.id)
@@ -343,14 +343,14 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_sixth_photo(answer_message.from_user.id)),
                                 InputMediaPhoto(db_poll.return_seventh_photo(answer_message.from_user.id))]
             for id_user in enum_user_id:
-                app.send_media_group(id_user, media=list_photo_users,
-                                     protect_content=True)
-                app.forward_messages(id_user, answer_message.from_user.id,
-                                     message_ids=db_poll.return_poll_id(
-                                         user_id=answer_message.from_user.id))
-            app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
-                             reply_markup=reply_markup_back_home,
-                             disable_web_page_preview=True)
+                await app.send_media_group(id_user, media=list_photo_users,
+                                           protect_content=True)
+                await app.forward_messages(id_user, answer_message.from_user.id,
+                                           message_ids=db_poll.return_poll_id(
+                                               user_id=answer_message.from_user.id))
+            await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
+                                   reply_markup=reply_markup_back_home,
+                                   disable_web_page_preview=True)
             return
     elif answer_message.data == 'add_photo':
         db_poll = DB_poll()
@@ -360,9 +360,9 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
             [InlineKeyboardButton('На главную', callback_data='home')]
         ]
         reply_markup_back_home = InlineKeyboardMarkup(ADD_PHOTO)
-        app.send_message(answer_message.from_user.id, 'Добавьте первую фотографию!',
-                         reply_markup=reply_markup_back_home,
-                         disable_web_page_preview=True)
+        await app.send_message(answer_message.from_user.id, 'Добавьте первую фотографию!',
+                               reply_markup=reply_markup_back_home,
+                               disable_web_page_preview=True)
 
         @app.on_message(filters.photo & condition_filter(["add_first_photo"]) & not_media_group())
         async def save_photos(app: Client, photo: Message):
@@ -411,9 +411,9 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
             [InlineKeyboardButton('На главную', callback_data='home')]
         ]
         reply_markup_back_home = InlineKeyboardMarkup(ADD_PHOTO)
-        app.send_message(answer_message.from_user.id, 'Отправьте следующую фотографию!',
-                         reply_markup=reply_markup_back_home,
-                         disable_web_page_preview=True)
+        await app.send_message(answer_message.from_user.id, 'Отправьте следующую фотографию!',
+                               reply_markup=reply_markup_back_home,
+                               disable_web_page_preview=True)
 
         @app.on_message(filters.photo & condition_filter(["add_second_photo"]) & not_media_group())
         async def save_photos(app: Client, photo: Message):
@@ -463,9 +463,9 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
             [InlineKeyboardButton('На главную', callback_data='home')]
         ]
         reply_markup_back_home = InlineKeyboardMarkup(ADD_PHOTO)
-        app.send_message(answer_message.from_user.id, 'Отправьте следующую фотографию!',
-                         reply_markup=reply_markup_back_home,
-                         disable_web_page_preview=True)
+        await app.send_message(answer_message.from_user.id, 'Отправьте следующую фотографию!',
+                               reply_markup=reply_markup_back_home,
+                               disable_web_page_preview=True)
 
         @app.on_message(filters.photo & condition_filter(["add_third_photo"]) & not_media_group())
         async def save_photos(app: Client, photo: Message):
@@ -517,9 +517,9 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
             [InlineKeyboardButton('На главную', callback_data='home')]
         ]
         reply_markup_back_home = InlineKeyboardMarkup(ADD_PHOTO)
-        app.send_message(answer_message.from_user.id, 'Отправьте следующую фотографию!',
-                         reply_markup=reply_markup_back_home,
-                         disable_web_page_preview=True)
+        await app.send_message(answer_message.from_user.id, 'Отправьте следующую фотографию!',
+                               reply_markup=reply_markup_back_home,
+                               disable_web_page_preview=True)
 
         @app.on_message(filters.photo & condition_filter(["add_forth_photo"]) & not_media_group())
         async def save_photos(app: Client, photo: Message):
@@ -571,9 +571,9 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
             [InlineKeyboardButton('На главную', callback_data='home')]
         ]
         reply_markup_back_home = InlineKeyboardMarkup(ADD_PHOTO)
-        app.send_message(answer_message.from_user.id, 'Отправьте пятую фотографию!',
-                         reply_markup=reply_markup_back_home,
-                         disable_web_page_preview=True)
+        await app.send_message(answer_message.from_user.id, 'Отправьте пятую фотографию!',
+                               reply_markup=reply_markup_back_home,
+                               disable_web_page_preview=True)
 
         @app.on_message(filters.photo & condition_filter(["add_fiveth_photo"]) & not_media_group())
         async def save_photos(app: Client, photo: Message):
@@ -626,9 +626,9 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
             [InlineKeyboardButton('На главную', callback_data='home')]
         ]
         reply_markup_back_home = InlineKeyboardMarkup(ADD_PHOTO)
-        app.send_message(answer_message.from_user.id, 'Отправьте шестую фотографию!',
-                         reply_markup=reply_markup_back_home,
-                         disable_web_page_preview=True)
+        await app.send_message(answer_message.from_user.id, 'Отправьте шестую фотографию!',
+                               reply_markup=reply_markup_back_home,
+                               disable_web_page_preview=True)
 
         @app.on_message(filters.photo & condition_filter(["add_sixth_photo"]) & not_media_group())
         async def save_photos(app: Client, photo: Message):
@@ -684,9 +684,9 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
             [InlineKeyboardButton('На главную', callback_data='home')]
         ]
         reply_markup_back_home = InlineKeyboardMarkup(ADD_PHOTO)
-        app.send_message(answer_message.from_user.id, 'Отправьте последнюю фотографию!',
-                         reply_markup=reply_markup_back_home,
-                         disable_web_page_preview=True)
+        await app.send_message(answer_message.from_user.id, 'Отправьте последнюю фотографию!',
+                               reply_markup=reply_markup_back_home,
+                               disable_web_page_preview=True)
 
         @app.on_message(filters.photo & condition_filter(["add_seventh_photo"]) & not_media_group())
         async def save_photos(app: Client, photo: Message):
@@ -736,8 +736,8 @@ def improve_vote(app: Client, answer_message: CallbackQuery):
     elif answer_message.data == 'make_edit':
         db_poll = DB_poll()
         db_poll.update_condition(stream="command_poll", user_id=answer_message.from_user.id)
-        app.send_message(chat_id=answer_message.from_user.id, text='Введите заново полностью текст '
-                                                                   'Вашей проблемы, с учетом правок!')
+        await app.send_message(chat_id=answer_message.from_user.id, text='Введите заново полностью текст '
+                                                                         'Вашей проблемы, с учетом правок!')
         return
     return
 
@@ -771,7 +771,6 @@ async def welcome_group(app: Client, message: Message):
 # @app.on_message(filters.photo & filters.me, group=1)
 # async def get_id_photo(app: Client, message: Message):
 #     await message.reply(message.photo.file_id)
-
 
 
 print('I`m working')
