@@ -231,12 +231,12 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
         if db_poll.simple_condition(answer_message.from_user.id) == "check_create":
             db_poll.update_condition('start', answer_message.from_user.id)
             for id_user in enum_user_id:
-                chat_id = await app.get_chat(id_user)
-                if id_user != chat_id.id:
-                    chat_member = await app.get_chat_member(chat_id.id, id_user)
-                    if chat_member.status != 'banned' or 'left':
-                        await app.forward_messages(id_user, answer_message.from_user.id,
-                                                   message_ids=message_poll_id)
+                try:
+                    await app.forward_messages(id_user, answer_message.from_user.id,
+                                               message_ids=message_poll_id)
+                except Exception as e:
+                    if "USER_IS_BLOCKED" in str(e):
+                        pass
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
@@ -244,14 +244,14 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
         if db_poll.simple_condition(answer_message.from_user.id) == "add_first_photo":
             db_poll.update_condition('start', answer_message.from_user.id)
             for id_user in enum_user_id:
-                chat_id = await app.get_chat(id_user)
-                if id_user != chat_id.id:
-                    chat_member = await app.get_chat_member(chat_id.id, id_user)
-                    if chat_member.status != 'banned' or 'left':
-                        await app.send_photo(id_user, photo=message_photo_id, protect_content=True)
-                        await app.forward_messages(id_user, answer_message.from_user.id,
-                                                   message_ids=db_poll.return_poll_id(
-                                                       user_id=answer_message.from_user.id))
+                try:
+                    await app.send_photo(id_user, photo=message_photo_id, protect_content=True)
+                    await app.forward_messages(id_user, answer_message.from_user.id,
+                                               message_ids=db_poll.return_poll_id(
+                                                   user_id=answer_message.from_user.id))
+                except Exception as e:
+                    if "USER_IS_BLOCKED" in str(e):
+                        pass
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
@@ -261,15 +261,15 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
             list_photo_users = [InputMediaPhoto(db_poll.return_photos(answer_message.from_user.id)),
                                 InputMediaPhoto(db_poll.return_second_photo(answer_message.from_user.id))]
             for id_user in enum_user_id:
-                chat_id = await app.get_chat(id_user)
-                if id_user != chat_id.id:
-                    chat_member = await app.get_chat_member(chat_id.id, id_user)
-                    if chat_member.status != 'banned' or 'left':
-                        await app.send_media_group(id_user, media=list_photo_users,
-                                                   protect_content=True)
-                        await app.forward_messages(id_user, answer_message.from_user.id,
-                                                   message_ids=db_poll.return_poll_id(
-                                                       user_id=answer_message.from_user.id))
+                try:
+                    await app.send_media_group(id_user, media=list_photo_users,
+                                               protect_content=True)
+                    await app.forward_messages(id_user, answer_message.from_user.id,
+                                               message_ids=db_poll.return_poll_id(
+                                                   user_id=answer_message.from_user.id))
+                except Exception as e:
+                    if "USER_IS_BLOCKED" in str(e):
+                        pass
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
@@ -280,15 +280,15 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_second_photo(answer_message.from_user.id)),
                                 InputMediaPhoto(db_poll.return_third_photo(answer_message.from_user.id))]
             for id_user in enum_user_id:
-                chat_id = await app.get_chat(id_user)
-                if id_user != chat_id.id:
-                    chat_member = await app.get_chat_member(chat_id.id, id_user)
-                    if chat_member.status != 'banned' or 'left':
-                        await app.send_media_group(id_user, media=list_photo_users,
-                                                   protect_content=True)
-                        await app.forward_messages(id_user, answer_message.from_user.id,
-                                                   message_ids=db_poll.return_poll_id(
-                                                       user_id=answer_message.from_user.id))
+                try:
+                    await app.send_media_group(id_user, media=list_photo_users,
+                                               protect_content=True)
+                    await app.forward_messages(id_user, answer_message.from_user.id,
+                                               message_ids=db_poll.return_poll_id(
+                                                   user_id=answer_message.from_user.id))
+                except Exception as e:
+                    if "USER_IS_BLOCKED" in str(e):
+                        pass
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
@@ -301,15 +301,15 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_forth_photo(answer_message.from_user.id))
                                 ]
             for id_user in enum_user_id:
-                chat_id = await app.get_chat(id_user)
-                if id_user != chat_id.id:
-                    chat_member = await app.get_chat_member(chat_id.id, id_user)
-                    if chat_member.status != 'banned' or 'left':
-                        await app.send_media_group(id_user, media=list_photo_users,
-                                                   protect_content=True)
-                        await app.forward_messages(id_user, answer_message.from_user.id,
-                                                   message_ids=db_poll.return_poll_id(
-                                                       user_id=answer_message.from_user.id))
+                try:
+                    await app.send_media_group(id_user, media=list_photo_users,
+                                               protect_content=True)
+                    await app.forward_messages(id_user, answer_message.from_user.id,
+                                               message_ids=db_poll.return_poll_id(
+                                                   user_id=answer_message.from_user.id))
+                except Exception as e:
+                    if "USER_IS_BLOCKED" in str(e):
+                        pass
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
@@ -323,15 +323,15 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_fiveth_photo(answer_message.from_user.id)),
                                 ]
             for id_user in enum_user_id:
-                chat_id = await app.get_chat(id_user)
-                if id_user != chat_id.id:
-                    chat_member = await app.get_chat_member(chat_id.id, id_user)
-                    if chat_member.status != 'banned' or 'left':
+                try:
                         await app.send_media_group(id_user, media=list_photo_users,
                                                    protect_content=True)
                         await app.forward_messages(id_user, answer_message.from_user.id,
                                                    message_ids=db_poll.return_poll_id(
                                                        user_id=answer_message.from_user.id))
+                except Exception as e:
+                    if "USER_IS_BLOCKED" in str(e):
+                        pass
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
@@ -346,15 +346,15 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_sixth_photo(answer_message.from_user.id)),
                                 ]
             for id_user in enum_user_id:
-                chat_id = await app.get_chat(id_user)
-                if id_user != chat_id.id:
-                    chat_member = await app.get_chat_member(chat_id.id, id_user)
-                    if chat_member.status != 'banned' or 'left':
-                        await app.send_media_group(id_user, media=list_photo_users,
-                                                   protect_content=True)
-                        await app.forward_messages(id_user, answer_message.from_user.id,
-                                                   message_ids=db_poll.return_poll_id(
-                                                       user_id=answer_message.from_user.id))
+                try:
+                    await app.send_media_group(id_user, media=list_photo_users,
+                                               protect_content=True)
+                    await app.forward_messages(id_user, answer_message.from_user.id,
+                                               message_ids=db_poll.return_poll_id(
+                                                   user_id=answer_message.from_user.id))
+                except Exception as e:
+                    if "USER_IS_BLOCKED" in str(e):
+                        pass
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
@@ -369,15 +369,15 @@ async def improve_vote(app: Client, answer_message: CallbackQuery):
                                 InputMediaPhoto(db_poll.return_sixth_photo(answer_message.from_user.id)),
                                 InputMediaPhoto(db_poll.return_seventh_photo(answer_message.from_user.id))]
             for id_user in enum_user_id:
-                chat_id = await app.get_chat(id_user)
-                if id_user != chat_id.id:
-                    chat_member = await app.get_chat_member(chat_id.id, id_user)
-                    if chat_member.status != 'banned' or 'left':
-                        await app.send_media_group(id_user, media=list_photo_users,
-                                                   protect_content=True)
-                        await app.forward_messages(id_user, answer_message.from_user.id,
-                                                   message_ids=db_poll.return_poll_id(
-                                                       user_id=answer_message.from_user.id))
+                try:
+                    await app.send_media_group(id_user, media=list_photo_users,
+                                               protect_content=True)
+                    await app.forward_messages(id_user, answer_message.from_user.id,
+                                               message_ids=db_poll.return_poll_id(
+                                                   user_id=answer_message.from_user.id))
+                except Exception as e:
+                    if "USER_IS_BLOCKED" in str(e):
+                        pass
             await app.send_message(answer_message.from_user.id, 'Ваше голосование опубликовано!',
                                    reply_markup=reply_markup_back_home,
                                    disable_web_page_preview=True)
